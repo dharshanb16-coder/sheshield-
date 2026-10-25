@@ -1,0 +1,70 @@
+{
+  "artifact_type": "sheshield_distress_logistic_regression",
+  "artifact_version": "sheshield-logreg-v1",
+  "task": "binary_distress_detection",
+  "positive_class": "warning_or_severe_distress",
+  "feature_order": [
+    "motion_mean",
+    "motion_peak",
+    "motion_variance",
+    "jerk_peak",
+    "ppg_valid",
+    "heart_rate_change",
+    "manual_sos",
+    "location_fresh",
+    "battery_percent"
+  ],
+  "weights": [
+    3.8129231072042935,
+    1.5059672961289863,
+    5.057084772567644,
+    0.5317210652714652,
+    -0.6018088470190713,
+    0.13348025066609032,
+    0.8443310770837312,
+    -0.619243549461139,
+    -0.0010681747960047247
+  ],
+  "bias": -13.943810665596542,
+  "sigmoid": {
+    "formula": "1 / (1 + exp(-(bias + sum(weight_i * feature_i))))",
+    "output": "distress_probability"
+  },
+  "decision_thresholds": {
+    "warning": 0.4,
+    "alert": 0.75
+  },
+  "training": {
+    "samples": 2500,
+    "class_counts": {
+      "normal": 2000,
+      "warning": 250,
+      "severe_distress": 250
+    },
+    "positive_samples": 500,
+    "test_size": 0.2,
+    "split": "stratified",
+    "random_seed": 42,
+    "scaler": "StandardScaler folded into exported raw-space weights",
+    "classifier": "LogisticRegression",
+    "regularization": "L2",
+    "C": 1.0
+  },
+  "validation_metrics": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "roc_auc": 1.0,
+    "confusion_matrix": [
+      [
+        400,
+        0
+      ],
+      [
+        0,
+        100
+      ]
+    ]
+  }
+}

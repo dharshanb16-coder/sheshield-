@@ -1,68 +1,66 @@
-# Prerequisites
-*.d
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# dependencies
+node_modules/
 
-# Precompiled Headers
-*.gch
-*.pch
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
 
-# Linker files
-*.ilk
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
 
-# Debugger Files
-*.pdb
+# Metro
+.metro-health-check*
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-*.so.*
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
 
-# Fortran module files
-*.mod
-*.smod
+# macOS
+.DS_Store
+*.pem
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# local env files
+.env*.local
 
-# Executables
-*.exe
-*.out
-*.app
+# typescript
+*.tsbuildinfo
 
-# Build directories
-build/
-Build/
-build-*/
+app-example
 
-# CMake generated files
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
-install_manifest.txt
-compile_commands.json
+# generated native folders
+/ios
+/android
 
-# Temporary files
-*.tmp
-*.log
-*.bak
+# IDE
+.vscode/
+.idea/
 *.swp
+*.swo
+*~
 
-# vcpkg
-vcpkg_installed/
+# Logs
+logs
+*.log
 
-# debug information files
-*.dwo
+# OS
+Thumbs.db
 
-# test output & cache
-Testing/
+# Build files
+*.tgz
+*.tar.gz
 .cache/
+
+# Webdev artifacts (checkpoint zips, migrations, etc.)
+.webdev/
+.project-config.json

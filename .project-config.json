@@ -1,0 +1,52 @@
+{
+  "build_command": "pnpm run build",
+  "capabilities": [
+    "server",
+    "db",
+    "user"
+  ],
+  "dev_command": "pnpm run dev",
+  "env_vars": {
+    "DATABASE_URL": "mysql://2iaZs3M5xNw7nfH.root:T0pMK4N60oPaTFA7E1wq@gateway02.us-east-1.prod.aws.tidbcloud.com:4000/AEqxhvZk4d84QaY7i8gsii?ssl={\"rejectUnauthorized\":true}",
+    "MANUS_WEBDEV_PROJECT_ID": "AEqxhvZk4d84QaY7i8gsii"
+  },
+  "experiments": [
+    "no_db_push"
+  ],
+  "git_remote": {
+    "repo_url": "https://7f0548f6b28a1758d9bf7be630d36cb4.artifacts.cloudflare.net/git/prod/AEqxhvZk4d84QaY7i8gsii.git",
+    "expiration": "2026-10-18T02:12:19.244Z",
+    "token": "art_v2_x_da69fc11b4e3b5454d09c4131dc6bb42cc117f28?expires=1792289539",
+    "backend": "GIT_BACKEND_ARTIFACTS"
+  },
+  "name": "sheshield-companion",
+  "path": "/home/ubuntu/sheshield-companion",
+  "port": 3000,
+  "runtime_endpoints": null,
+  "secrets": {
+    "BUILT_IN_FORGE_API_KEY": "cgCekTJCxQU5bwqAU47Cm6",
+    "BUILT_IN_FORGE_API_URL": "https://forge.manus.ai",
+    "EXPO_APP_QR_URL": "exps://8081-i2ryqp7oo2ynuyi2fdsm6-62f2aa0d.sg2.manus.computer",
+    "EXPO_PACKAGER_PROXY_URL": "https://8081-i2ryqp7oo2ynuyi2fdsm6-62f2aa0d.sg2.manus.computer",
+    "EXPO_PUBLIC_API_BASE_URL": "https://3000-i2ryqp7oo2ynuyi2fdsm6-62f2aa0d.sg2.manus.computer",
+    "EXPO_PUBLIC_OAUTH_PORTAL_URL": "https://manus.im",
+    "EXPO_PUBLIC_OAUTH_SERVER_URL": "https://api.manus.im",
+    "EXPO_PUBLIC_OWNER_NAME": "Dharshan B",
+    "EXPO_PUBLIC_OWNER_OPEN_ID": "RcX7NaYZ9BFB9bEjKb557f",
+    "JWT_SECRET": "nyyPU33PNiCfXRpzvaNEdE",
+    "OAUTH_SERVER_URL": "https://api.manus.im",
+    "OWNER_NAME": "Dharshan B",
+    "OWNER_OPEN_ID": "RcX7NaYZ9BFB9bEjKb557f",
+    "REACT_NATIVE_PACKAGER_HOSTNAME": "8081-i2ryqp7oo2ynuyi2fdsm6-62f2aa0d.sg2.manus.computer",
+    "VITE_ANALYTICS_ENDPOINT": "https://manus-analytics.com",
+    "VITE_ANALYTICS_WEBSITE_ID": "8508f956-f795-4776-a427-6228bcb5353c",
+    "VITE_APP_ID": "AEqxhvZk4d84QaY7i8gsii",
+    "VITE_APP_LOGO": "",
+    "VITE_APP_TITLE": "SheShield Companion",
+    "VITE_FRONTEND_FORGE_API_KEY": "HfTCCufBgaQarxXGoGPFXr",
+    "VITE_FRONTEND_FORGE_API_URL": "https://forge.manus.ai",
+    "VITE_OAUTH_PORTAL_URL": "https://manus.im"
+  },
+  "template_id": "app",
+  "test_command": "pnpm test"
+}
