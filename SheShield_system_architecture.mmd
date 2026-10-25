@@ -1,0 +1,42 @@
+flowchart LR
+  classDef device fill:#F3E8FF,stroke:#6A1794,stroke-width:2,color:#211A25
+  classDef sensor fill:#E7F8F8,stroke:#00A7B5,stroke-width:2,color:#211A25
+  classDef app fill:#FCE7F3,stroke:#B8005E,stroke-width:2,color:#211A25
+  classDef cloud fill:#EEF2FF,stroke:#4655A8,stroke-width:2,color:#211A25
+  classDef safety fill:#FFF4D6,stroke:#D98A00,stroke-width:2,color:#211A25
+  classDef note fill:#FFFFFF,stroke:#CBD5E1,stroke-dasharray: 4 4,color:#475569
+
+  subgraph W[SheShield wearable]
+    S1[MPU6050\nMotion / impact]:::sensor
+    S2[MAX30102\nOptical signal]:::sensor
+    S3[SOS button\nManual trigger]:::safety
+    S4[GPS module\nOutdoor location]:::sensor
+    MCU[ESP32\nACDDF state machine]:::device
+    FB[Vibration + buzzer\nWarning feedback]:::safety
+    GSM[SIM800L\nSMS fallback]:::device
+    PWR[Protected 1S LiPo\nRegulated rails]:::device
+    S1 --> MCU
+    S2 --> MCU
+    S3 --> MCU
+    S4 --> MCU
+    MCU --> FB
+    MCU --> GSM
+    PWR --> MCU
+    PWR --> GSM
+  end
+
+  MCU -->|Bluetooth event\nNormal / Monitor / Warning / Alert / Resolved| PHONE
+  subgraph P[Companion smartphone]
+    PHONE[SheShield app\nDashboard + status]:::app
+    LOC[Phone location\nFreshness indicator]:::app
+    CONTACT[Trusted contacts\nVerified recipients]:::app
+    EVID[Optional evidence\nOff by default]:::app
+    PHONE --> LOC
+    PHONE --> CONTACT
+    PHONE --> EVID
+  end
+
+  CONTACT -->|Push / SMS gateway| NOTIFY[Notification delivery\nDelivery status]:::cloud
+  GSM -->|Where compatible| NOTIFY
+  PHONE --> LOG[Local event history\nAudit trail]:::cloud
+  PHONE -.-> NOTE[The prototype separates\ndetection, location, delivery\nand evidence status.]:::note

@@ -1,0 +1,50 @@
+flowchart TB
+  classDef esp fill:#F3E8FF,stroke:#6A1794,stroke-width:2,color:#211A25
+  classDef sensor fill:#E7F8F8,stroke:#00A7B5,stroke-width:2,color:#211A25
+  classDef modem fill:#FFF4D6,stroke:#D98A00,stroke-width:2,color:#211A25
+  classDef power fill:#FEE2E2,stroke:#B42318,stroke-width:2,color:#211A25
+  classDef io fill:#FCE7F3,stroke:#B8005E,stroke-width:2,color:#211A25
+  classDef note fill:#FFFFFF,stroke:#CBD5E1,stroke-dasharray: 4 4,color:#475569
+
+  BAT[Protected 1S LiPo\n3.7 V nominal]:::power
+  CHG[1S charger / protection\nwith power switch]:::power
+  REG3[3.3 V regulator\nESP32 + sensors]:::power
+  REGM[Approved high-current modem rail\nSIM800L board voltage]:::power
+  GND[Common ground\nAll modules]:::power
+
+  ESP[ESP32 DevKit\n3V3 / GND / GPIO / UART]:::esp
+  MPU[MPU6050\nVCC 3V3 · GND\nSDA → GPIO21\nSCL → GPIO22]:::sensor
+  MAX[MAX30102\nVCC 3V3 · GND\nSDA → GPIO21\nSCL → GPIO22]:::sensor
+  GPS[NEO-6M GPS\nVCC per breakout\nTX → ESP32 GPIO16\nRX → ESP32 GPIO17]:::sensor
+  SIM[SIM800L\nVBAT → modem rail\nGND → common GND\nTX → ESP32 GPIO27\nRX → ESP32 GPIO26]:::modem
+  CAP[470–1000 µF + 100 nF\nnear SIM800L supply]:::note
+  ANT[GSM antenna\nconnected before transmit]:::modem
+  SOS[SOS button\nGPIO25 → GND\nINPUT_PULLUP]:::io
+  MOTOR[Vibration motor\nGPIO18 → MOSFET gate\nExternal motor supply]:::io
+  BUZZ[Buzzer\nGPIO19 through driver\noptional]:::io
+
+  BAT --> CHG
+  CHG --> REG3
+  CHG --> REGM
+  CHG --> GND
+  REG3 --> ESP
+  REG3 --> MPU
+  REG3 --> MAX
+  REG3 --> GPS
+  REGM --> SIM
+  GND --> ESP
+  GND --> MPU
+  GND --> MAX
+  GND --> GPS
+  GND --> SIM
+  ESP -->|I2C shared bus| MPU
+  ESP -->|I2C shared bus| MAX
+  ESP -->|UART2| GPS
+  ESP -->|UART1| SIM
+  ESP --> SOS
+  ESP --> MOTOR
+  ESP --> BUZZ
+  REGM -.-> CAP
+  SIM --> ANT
+  SAFETY[Power safety:\nNever power SIM800L from ESP32 3.3 V pin.\nVerify breakout voltage before connecting LiPo.]:::note
+  REGM -.-> SAFETY
