@@ -1,0 +1,196 @@
+SheShield Companion
+SheShield Companion is a connected personal-safety system that combines an ESP32 wearable, a React Native mobile app, GPS location sharing, emergency SMS, and a consent-based live camera session for trusted assistance.
+
+The project is designed to help a user send an emergency alert quickly while sharing useful context with an authorized contact. The system supports Bluetooth Low Energy telemetry from a wearable, phone-based location capture, a configured SMS alert, and an authenticated web viewer for a temporary LiveKit session.
+
+Safety notice: SheShield is a prototype and should not be treated as a replacement for local emergency services. Test the hardware, phone permissions, network coverage, SMS delivery, and trusted-viewer access before relying on it.
+
+Main Features
+•	Manual SOS: The user can trigger an emergency event from the mobile app or connected wearable.
+•	Emergency SMS: The configured alert flow sends an SOS message to 8825542451 with the freshest available GPS coordinates and a Google Maps link.
+•	Wearable telemetry: The app connects to an ESP32 wearable over BLE using a UART-style service.
+•	Sensor support: The reference hardware supports motion, pulse/PPG contact quality, GPS, battery, and GSM fallback components.
+•	Live location: The app requests location permission and attaches coordinates to the emergency alert when available.
+•	Consented live camera: After an SOS event, the user must explicitly approve camera access before a LiveKit video session starts.
+•	Authenticated viewer: A trusted viewer signs in and receives a short-lived subscriber token for the active SOS room.
+•	Visible streaming state: The app shows when camera sharing is active and provides a stop control.
+•	Event history: Emergency and wearable events can be reviewed in the app.
+•	Contacts and settings: The app includes screens for contacts, connection preferences, permissions, and safety settings.
+•	GSM fallback: The hardware documentation includes SIM800L-based SMS fallback for situations where the phone or internet path is unavailable.
+
+System Overview
+ESP32 wearable
+  ├── Motion sensor
+  ├── Pulse/PPG sensor
+  ├── GPS module
+  ├── Battery status
+  └── BLE UART / GSM fallback
+          │
+          ▼
+SheShield mobile app
+  ├── Wearable connection
+  ├── SOS control
+  ├── GPS capture
+  ├── Emergency SMS flow
+  ├── Event history
+  └── Explicit camera consent
+          │
+          ├── Short-lived LiveKit publisher session
+          ▼
+SheShield backend
+  ├── Authenticated API routes
+  ├── Event persistence
+  ├── LiveKit token generation
+  └── Trusted viewer authorization
+          │
+          ▼
+Authenticated web viewer
+  └── Watches the active SOS video session
+
+Repository Structure
+app/             Expo Router screens and mobile routes
+components/      Dashboard, maps, SOS camera, and reusable UI
+constants/       App constants and theme configuration
+docs/            Hardware, BLE, LiveKit, and project documentation
+drizzle/         Database schema and migrations/metadata
+firmware/        ESP32 sketches and hardware reference code
+hooks/           React hooks for authentication and app state
+lib/             BLE, SMS, GPS, theme, API, and runtime helpers
+server/          Express/tRPC API, authentication, persistence, and LiveKit tokens
+shared/          Shared types and constants
+scripts/         Development and utility scripts
+
+Technology Stack
+Mobile
+•	Expo SDK 57
+•	React Native
+•	Expo Router
+•	NativeWind
+•	Expo Camera
+•	Expo Location
+•	Expo SMS
+•	Expo Notifications
+•	React Native BLE PLX
+•	React Native Maps
+•	LiveKit React Native and WebRTC bindings
+
+Backend
+•	Node.js
+•	Express
+•	tRPC
+•	Drizzle ORM
+•	MySQL-compatible managed database
+•	LiveKit Server SDK for short-lived room tokens
+
+Hardware
+•	ESP32 development board
+•	MPU6050 motion sensor
+•	MAX30102 pulse/PPG sensor
+•	NEO-6M GPS module
+•	SIM800L GSM module
+•	Rechargeable battery and charging circuit
+
+See docs/SheShield_Hardware_Connections.md for wiring and pin details.
+
+Local Development
+Requirements
+•	Node.js 20 or newer
+•	pnpm
+•	Expo-compatible Android or iOS development environment
+•	ESP32 hardware for BLE testing
+•	A configured database for backend development
+•	A LiveKit Cloud project for live camera testing
+
+Install Dependencies
+pnpm install
+
+Configure Environment Variables
+Create a local environment file from the example template when available. Server-only LiveKit values must never be placed in the mobile bundle or committed to Git:
+
+LIVEKIT_URL=wss://your-project.livekit.cloud
+LIVEKIT_API_KEY=your_server_api_key
+LIVEKIT_API_SECRET=your_server_api_secret
+
+The mobile app may use a browser-safe API base URL, but it must not contain the LiveKit API secret.
+
+Start the Development Project
+pnpm dev
+
+The managed project uses:
+
+•	Metro/Web preview: http://localhost:8081
+•	Backend API: http://localhost:3000
+
+Useful commands:
+
+pnpm check       # TypeScript validation
+pnpm lint        # Expo lint checks
+pnpm db:push     # Apply the Drizzle schema
+pnpm test        # Run the configured test suite
+
+SOS Flow
+1	The user presses SOS in the app or triggers the wearable emergency input.
+2	The app records the event and requests the freshest available location.
+3	The configured SMS flow sends the alert to 8825542451 with a Google Maps location link.
+4	The app shows a clear camera-consent prompt.
+5	If the user approves, the app requests a short-lived LiveKit publisher token.
+6	The mobile app publishes the camera stream to the SOS room.
+7	An authenticated trusted viewer requests a short-lived viewer token and joins the room.
+8	The user can stop camera sharing at any time, and the session is disconnected when the SOS flow ends.
+
+Privacy and Security
+•	Camera access is never started silently; explicit user consent is required.
+•	A visible in-app status indicates when live camera sharing is active.
+•	LiveKit API credentials remain on the server and are not bundled into Expo output.
+•	Publisher and viewer tokens are short-lived and scoped to the SOS room.
+•	Viewer access requires authentication.
+•	GPS data should be treated as sensitive personal information.
+•	Do not commit .env, API secrets, private keys, or production contact lists.
+•	Use test phone numbers and test rooms during development.
+•	Review local privacy, consent, emergency-contact, and data-retention requirements before deployment.
+
+Hardware Bring-Up
+9	Assemble the ESP32 and sensors according to the wiring guide.
+10	Flash the selected firmware sketch from firmware/.
+11	Confirm power and ground connections before attaching sensors.
+12	Test the BLE UART advertisement and pairing.
+13	Verify motion, PPG contact, GPS, and battery packets individually.
+14	Test the manual SOS input without sending alerts to a real emergency contact.
+15	Test the SIM800L path with a controlled test number.
+16	Connect the mobile app and confirm event history updates.
+
+The firmware sketches are reference prototypes. Confirm voltage levels, current requirements, antenna placement, and enclosure safety before field use.
+
+Testing Checklist
+•	☐The mobile app starts without missing native permissions.
+•	☐The wearable is discovered over BLE.
+•	☐Telemetry packets are displayed in the app.
+•	☐GPS permission and location refresh work on the target device.
+•	☐The SOS message contains the expected maps link.
+•	☐The test SMS reaches the configured test contact.
+•	☐Camera permission is requested only after SOS consent.
+•	☐The LiveKit publisher connects with a short-lived token.
+•	☐An authenticated viewer can join the active room.
+•	☐An unauthenticated viewer is rejected.
+•	☐The Stop live camera action disconnects the room.
+•	☐The GSM fallback is tested separately from the internet path.
+•	☐Battery, reconnect, and network-loss behavior are documented.
+
+Documentation
+•	Hardware connections
+•	BLE UART and fallback
+•	LiveKit SOS viewer
+•	Complete project document
+•	Companion app and Bluetooth notes
+
+Roadmap
+•	Complete native Android and iOS development builds.
+•	Validate the wearable enclosure, power budget, and field connectivity.
+•	Add robust reconnection handling for BLE and GSM paths.
+•	Add contact verification and safer production contact management.
+•	Perform controlled testing with documented false-alert and missed-alert cases.
+•	Review privacy, consent, data retention, and emergency-response procedures with project mentors.
+•	Prepare a limited pilot only after hardware, network, and safety validation.
+
+License
+Add the project license selected by the team before publishing this repository. If the repository contains third-party libraries, firmware, images, or documentation, retain their original license and attribution notices.
